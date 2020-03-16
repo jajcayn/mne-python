@@ -72,7 +72,7 @@ def read_raw_fieldtrip(fname, info, data_name='data'):
 
 
 def read_epochs_fieldtrip(fname, info, data_name='data',
-                          trialinfo_column=0):
+                          trialinfo_column=0, read_events=True):
     """Load epoched data from a FieldTrip preprocessing structure.
 
     This function expects to find epoched data in the structure data_name is
@@ -119,8 +119,12 @@ def read_epochs_fieldtrip(fname, info, data_name='data',
 
     info = _create_info(ft_struct, info)  # create info structure
     data = np.array(ft_struct['trial'])  # create the epochs data array
-    events = _create_events(ft_struct, trialinfo_column)
-    metadata = _create_event_metadata(ft_struct)
+    if read_events:
+        events = _create_events(ft_struct, trialinfo_column)
+        metadata = _create_event_metadata(ft_struct)
+    else:
+        events = None
+        metadata = None
     tmin = _set_tmin(ft_struct)  # create start time
 
     epochs = EpochsArray(data=data, info=info, tmin=tmin,

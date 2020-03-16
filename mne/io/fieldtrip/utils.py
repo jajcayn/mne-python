@@ -22,7 +22,8 @@ _unit_dict = {'m': 1,
               'uV': 1e-6,
               'T': 1,
               'T/m': 1,
-              'T/cm': 1e2}
+              'T/cm': 1e2,
+              'dm': 1e-1}
 
 NOINFO_WARNING = 'Importing FieldTrip data without an info dict from the ' \
                  'original file. Channel locations, orientations and types ' \
@@ -257,6 +258,8 @@ def _process_channel_eeg(cur_ch, elec):
     chan_idx_in_elec = np.where(all_labels == cur_ch['ch_name'])[0][0]
     position = np.squeeze(elec['chanpos'][chan_idx_in_elec, :])
     chanunit = elec['chanunit'][chan_idx_in_elec]
+    if chanunit == "unknown":
+        chanunit = ["uV"]
     position_unit = elec['unit']
 
     position = position * _unit_dict[position_unit]
